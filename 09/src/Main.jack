@@ -1,0 +1,247 @@
+class Main {
+
+    function void main() {
+        do Main.init();
+        return;
+    }
+
+    function void init() {
+        var int seed;
+        var int state;
+
+        let seed = 0;
+        let state = 0;
+
+        do Screen.clearScreen();
+        do ScreenRenderer.printTitleScreen(state);
+
+        while(Keyboard.keyPressed() = 0) {
+            let seed = seed + 1;
+        }
+        do Random.setSeed(seed);
+
+        while(true) {
+            let state = Main.openMainScreen(state);
+            if(state = -1) {
+                do ScreenRenderer.printGoodbyeScreen();
+                return;
+            }
+            if(state = 0) {
+                do Main.startEngine();
+            }
+            if(state = 1) {
+                do Main.openHowToPlay();
+            }
+            if(state = 2) {
+                do Main.openControls();
+            }
+            if(state = 3) {
+                do Main.openAboutDevelopment();
+            }
+        }
+        return;
+    }
+
+    function void openHowToPlay() {
+        do ScreenRenderer.printTowToPlayScreen();
+        while(~(Keyboard.keyPressed() = 140)) {
+            
+        }
+        return;
+    }
+
+
+    function void openControls() {
+        do ScreenRenderer.printControlsScreen();
+        while(~(Keyboard.keyPressed() = 140)) {
+            
+        }
+        return;
+    }
+
+    function void openAboutDevelopment() {
+        do ScreenRenderer.printAboutDevelopmentScreen();
+        while(~(Keyboard.keyPressed() = 140)) {
+            
+        }
+        return;
+    }
+
+    function void startEngine() {
+        var Level level;
+        var int difficulty;
+        var int exitCode;
+        var int seed;
+
+        let seed = 0;
+        let difficulty = 0;
+
+        while(true) {
+            do Screen.clearScreen();
+            let level = Main.getRandomGeneratedLevel(difficulty);
+            let exitCode = Ticks.run(level);
+            if(exitCode = 1) {
+                do ScreenRenderer.printDeathScreen(Bar32.getLevel(), Bar32.getScore());
+                do Sys.wait(500);
+                while(~(Keyboard.keyPressed() = 32)) {
+                    let seed = seed + 1;
+                }
+                do Sys.wait(500);
+                do Random.setSeed(seed);
+                let difficulty = 0;
+                do Bar32.reset();
+                // **** just for testing ***
+                return;
+            } else {
+                let difficulty = difficulty + 1;
+            }
+            do Player32.dispose();
+            do level.dispose();
+        }
+        return;
+    }
+
+    function int openMainScreen(int state) {
+        var boolean doneTitleScreen;
+        var int key;
+        var int lastKey;
+        var int initalKey;
+        var int titleScreenOption;
+
+        let doneTitleScreen = false;
+        let key = 0;
+        let lastKey = 0;
+        let initalKey = Keyboard.keyPressed();
+        let titleScreenOption = state;
+
+        do Screen.clearScreen();
+        do ScreenRenderer.printTitleScreen(state);
+
+        while(~(doneTitleScreen)) {
+            let key = Keyboard.keyPressed();
+            if(lastKey = 0) {
+                // W or arrow up
+                if(key = 87) {
+                    if(titleScreenOption > 0) {
+                        let titleScreenOption = titleScreenOption - 1;
+                    }
+                    do ScreenRenderer.printTitleScreenOptions(titleScreenOption);
+                }
+                if(key = 131) {
+                    if(titleScreenOption > 0) {
+                        let titleScreenOption = titleScreenOption - 1;
+                    }
+                    do ScreenRenderer.printTitleScreenOptions(titleScreenOption);
+                }
+                // S or arrow down
+                if(key = 83) {
+                    if(titleScreenOption < 3) {
+                        let titleScreenOption = titleScreenOption + 1;
+                    }
+                    do ScreenRenderer.printTitleScreenOptions(titleScreenOption);
+                }
+                if(key = 133) {
+                    if(titleScreenOption < 3) {
+                        let titleScreenOption = titleScreenOption + 1;
+                    }
+                    do ScreenRenderer.printTitleScreenOptions(titleScreenOption);
+                }
+                // Space or enter
+                if(key = 32) {
+                    return titleScreenOption;
+                }
+                if(key = 128) {
+                    return titleScreenOption;
+                }
+                if(key = 140) {
+                    if(~(initalKey = 140)) {
+                        return -1;
+                    }
+                }
+                let initalKey = 0;
+            }
+            let lastKey = key;
+        }
+        return titleScreenOption;
+    }
+
+    function Level getRandomGeneratedLevel(int difficulty) {
+        var Level level;
+        var int width, height;
+        var int x, y;
+        let width = 16;
+        let height = 7;
+        let level = Level.new(width, height, 0, 0, difficulty);
+        let y = 0;
+        while(~(y = height)) {
+            let x = 0;
+            while(~(x = width)) {
+                if(Random.randRange(10) = 0) {
+                    do level.setTile(x, y, 2);
+                }
+                let x = x + 1;
+            }
+            let y = y + 1;
+        }
+
+        do Main.iterateStatic(level, width - 2, height);
+
+        do level.setTile(15, 0, 1);
+        do level.setTile(15, 1, 1);
+        do level.setTile(15, 2, 1);
+        do level.setTile(15, 3, 6);
+        do level.setTile(15, 4, 1);
+        do level.setTile(15, 5, 1);
+        do level.setTile(15, 6, 1);
+
+        do level.setTile(0, 0, 0);
+        do level.setTile(1, 0, 0);
+        do level.setTile(2, 1, 0);
+
+        do level.spwanEnemy1(Random.randRange(3) + 4, Random.randRange(3) + 2);
+        if(difficulty > 0) {
+            do level.spwanEnemy2(Random.randRange(2) + 2, Random.randRange(2) + 2);
+        }
+        if(difficulty > 1) {
+            do level.spwanEnemy3(Random.randRange(8) + 5, Random.randRange(6) + 1);
+        }
+        if(difficulty > 2) {
+            do level.spwanEnemy4(Random.randRange(2) + 3, Random.randRange(4) + 1);
+        }
+        if(difficulty > 5) {
+            do level.spwanEnemy5(Random.randRange(2) + 9, Random.randRange(2) + 1);
+        }
+        if(difficulty > 8) {
+            do level.spwanEnemy6(Random.randRange(3) + 11, Random.randRange(4) + 3);
+        }
+
+        return level;
+    }
+
+    function void iterateStatic(Level level, int width, int height) {
+        var int x, y;
+        var boolean spaceX, spaceY;
+        let y = 0;
+        let spaceY = false;
+        while(~(y = height)) {
+            if(spaceY) {
+                let spaceY = false;
+                let x = 0;
+                let spaceX = false;
+                while(~(x = width)) {
+                    if(spaceX) {
+                        do level.setTile(x, y, 1);
+                        let spaceX = false;
+                    } else {
+                        let spaceX = true;
+                    }
+                    let x = x + 1;
+                }
+            } else {
+                let spaceY = true;
+            }
+            let y = y + 1;
+        }
+        return;
+    }
+}

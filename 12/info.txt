@@ -1,0 +1,2 @@
+Math Klasse hat Hilfsfunktion die von Klasse Screen benötigt wird.
+Alles liegt in den richtigen Ordnern!

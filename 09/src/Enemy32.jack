@@ -1,0 +1,148 @@
+
+
+class Enemy32 {
+    field int xPos, yPos;
+    field int xLastPos, yLastPos;
+    field boolean spawned;
+    field int render;
+
+    constructor Enemy32 new() {
+        let spawned = false;
+        let render = 0;
+        return this;
+    }
+
+    method void spawn(int x, int y) {
+        let xPos = x;
+        let yPos = y;
+        let xLastPos = -1;
+        let yLastPos = -1;
+        let spawned = true;
+        let render = 0;
+        do ScreenRenderer.printEnemy32(xPos, yPos);
+        return;
+    }
+
+    method void dispose() {
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    method void onTick() {
+        if(Map32.getTile(xPos, yPos) = 4) {
+            do kill();
+        }
+        return;
+    }
+
+    method void onRender() {
+        var int rand, tmpX, tmpY;
+        var int shiftX, shiftY;
+        var Array path;
+        let render = render + 1;
+        let tmpX = xPos;
+        let tmpY = yPos;
+        if(render < 5) {
+            return;
+        }
+        if(~(spawned)) {
+            return;
+        }
+        //let path = Map32.findPlayerByPathFinding(xPos, yPos);
+        if(Map32.isPlayerInView(xPos, yPos)) {
+            let shiftX = Player32.getXPos() - xPos;
+            let shiftY = Player32.getYPos() - yPos;
+            
+            if(shiftX > 0) {
+                let tmpX = tmpX + 1;
+            }
+            if(shiftY > 0) {
+                let tmpY = tmpY + 1;
+            }
+            if(shiftX < 0) {
+                let tmpX = tmpX - 1;
+            }
+            if(shiftY < 0) {
+                let tmpY = tmpY - 1;
+            }
+        } else {
+            let rand = Random.randRange(5);
+            if(rand = 0) {
+                let tmpX = tmpX + 1;
+            }
+            if(rand = 1) {
+                let tmpX = tmpX - 1;
+            }
+            if(rand = 2) {
+                let tmpY = tmpY + 1;
+            }
+            if(rand = 3) {
+                let tmpY = tmpY - 1;
+            }
+        }
+        
+        if(Map32.getTile(tmpX, tmpY) = 4) {
+            do kill();
+        }
+        /*do Output.printInt(tmpX);
+        do Output.printInt(tmpY);
+        do Output.printInt(xLastPos);
+        do Output.printInt(yLastPos);
+        do Output.println();*/
+    
+        if(tmpX = xLastPos) {
+            if(tmpY = yLastPos) {
+                if(~(tmpX + 1 = xLastPos)) {
+                    if(Map32.locationFreeEnemy(xPos + 1, yPos)) {
+                        do move(xPos + 1, yPos);
+                        return;
+                    }
+                }
+                if(~(tmpX - 1 = xLastPos)) {
+                    if(Map32.locationFreeEnemy(xPos - 1, yPos)) {
+                        do move(xPos - 1, yPos);
+                        return;
+                    }
+                }
+                if(~(tmpY + 1 = yLastPos)) {
+                    if(Map32.locationFreeEnemy(xPos, yPos + 1)) {
+                        do move(xPos, yPos + 1);
+                        return;
+                    }
+                }
+                if(~(tmpY - 1 = yLastPos)) {
+                    if(Map32.locationFreeEnemy(xPos, yPos - 1)) {
+                        do move(xPos, yPos - 1);
+                        return;
+                    }
+                }
+                return;
+            }
+        }
+        if(Map32.locationFreeEnemy(tmpX, tmpY)) {
+            do move(tmpX, tmpY);
+            return;
+        }
+        return;
+    }
+
+    method void move(int xTmp, int yTmp) {
+        let xLastPos = xPos;
+        let yLastPos = yPos;
+        do Map32.setTile(xPos, yPos, 0);
+        let xPos = xTmp;
+        let yPos = yTmp;
+        do Map32.setTile(xPos, yPos, 5);
+        let render = 0;
+        return;
+    }
+
+    method void kill() {
+        if(spawned) {
+            do Map32.setTile(xPos, yPos, 0);
+            do Bar32.addScore(100);
+        }
+        let spawned = false;
+        return;
+    }
+}

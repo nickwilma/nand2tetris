@@ -1,0 +1,80 @@
+
+class Bomb32 {
+    field int timeUntilDetonate, timeUntilExplosionOver, range;
+    field int posX, posY;
+    field boolean detonated;
+
+    constructor Bomb32 new(int x, int y, int r) {
+        let timeUntilDetonate = 30;
+        let timeUntilExplosionOver = 10;
+        let range = r;
+        let posX = x;
+        let posY = y;
+        let detonated = false;
+        do render();
+        return this;
+    }
+
+    method void dispose() {
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    method void render() {
+        do Map32.setTile(posX, posY, 3);
+        return;
+    }
+
+    method void onTick() {
+        let timeUntilDetonate = timeUntilDetonate - 1;
+        if(timeUntilDetonate < 0) {
+            if(~(detonated)) {
+                do detonated();
+                //do ScreenRenderer.print("d");
+            }
+            let timeUntilDetonate = timeUntilDetonate - 1;
+        }
+        return;
+    }
+
+    method void detonated() {
+        if(timeUntilExplosionOver < 1) {
+            let detonated = true;
+            do doExplosion(0);
+            return;
+        }
+        do Map32.setTile(posX, posY, 0);
+
+        // Bomb
+        do doExplosion(4);
+
+        //do ScreenRenderer.printExplosion32(posX + 1, posY);
+        let range = range - 1;
+        let timeUntilExplosionOver = timeUntilExplosionOver - 1;
+        return;
+    }
+
+    method void doExplosion(int type) { 
+        //do Output.printInt(type);
+        if(Map32.locationExplosionPlacable(posX, posY)) {
+            do Map32.setTile(posX, posY, type);
+        }
+        if(Map32.locationExplosionPlacable(posX + 1, posY)) {
+            do Map32.setTile(posX + 1, posY, type);
+        }
+        if(Map32.locationExplosionPlacable(posX - 1, posY)) {
+            do Map32.setTile(posX - 1, posY, type);
+        }
+        if(Map32.locationExplosionPlacable(posX, posY + 1)) {
+            do Map32.setTile(posX, posY + 1, type);
+        }
+        if(Map32.locationExplosionPlacable(posX, posY - 1)) {
+            do Map32.setTile(posX, posY - 1, type);
+        }
+        return;
+    }
+
+    method boolean isDetonated() {
+        return detonated;
+    }
+}

@@ -1,0 +1,194 @@
+
+class Player32 {
+    static int xPos, yPos;
+    static int xPosBefore, yPosBefore;
+    static boolean reqRender, canMove;
+    static int bombTicks;
+    static Bomb32 bomb;
+    static int bombRadius;
+
+    function void spawn(int x, int y) {
+        let xPos = x;
+        let yPos = y;
+        let canMove = true;
+        let bombTicks = 20;
+        let bombRadius = 1;
+        let bomb = null;
+        do Player32.render(true);
+        return;
+    }
+
+    function void dispose() {
+        /*if(~(bomb = null)) {
+            do bomb.dispose();
+        }*/
+        do bomb.dispose();
+        return;
+    }
+
+    function void moveUp() {
+        do Player32.setPosition(xPos, yPos - 1);
+        return;
+    }
+
+    function void moveDown() {
+        do Player32.setPosition(xPos, yPos + 1);
+        return;
+    }
+
+    function void moveRight() {
+        do Player32.setPosition(xPos + 1, yPos);
+        return;
+    }
+
+    function void moveLeft() {
+        do Player32.setPosition(xPos - 1, yPos);
+        return;
+    }
+
+    function int getBombRadius() {
+        return bombRadius;
+    }
+
+    function void placeBomb() {
+        if(~(Map32.locationBombPlacable(xPos, yPos))) {
+            return;
+        }
+        if(bombTicks < 20) {
+            return;
+        }
+        if(~(bomb = null)) {
+            if(~(bomb.isDetonated())) {
+                return;
+            }
+            do bomb.dispose();
+        }
+
+        let bombTicks = 0;
+        let bomb = Bomb32.new(xPos, yPos, bombRadius);
+        do Player32.render(true);
+
+        return;
+    }
+
+    function void setPosition(int x, int y) {
+        if(~(Map32.locationFree(x, y))) {
+            return;
+        }
+        if(~(canMove)) {
+            return;
+        }
+        let xPosBefore = xPos;
+        let yPosBefore = yPos;
+        let xPos = x;
+        let yPos = y;
+        let canMove = false;
+        do Player32.render(true);
+        return;
+    }
+
+    function void onTick(int key) {
+        // W or arrow-up
+        if(key = 131) {
+            do Player32.moveUp();
+        }
+        if(key = 87) {
+            do Player32.moveUp();
+        }
+        // D or arrow right
+        if(key = 68) {
+            do Player32.moveRight();
+        }
+        if(key = 132) {
+            do Player32.moveRight();
+        }
+        // S or arrow-down
+        if(key = 83) {
+            do Player32.moveDown();
+        }
+        if(key = 133) {
+            do Player32.moveDown();
+        }
+        // A or arrow-left
+        if(key = 65) {
+            do Player32.moveLeft();
+        }
+        if(key = 130) {
+            do Player32.moveLeft();
+        }
+        // Space or enter
+        if(key = 32) {
+            do Player32.placeBomb();
+        }
+        if(key = 128) {
+            do Player32.placeBomb();
+        }
+
+        // Bomb
+        if(~(bomb = null)) {
+            do bomb.onTick();
+        }
+        let bombTicks = bombTicks + 1;
+        if(bombTicks > 100) {
+            let bombTicks = 101;
+        }
+        if(Map32.getTile(xPos, yPos) = 4) {
+            do Player32.kill();
+        }
+        if(Map32.getTile(xPos, yPos) = 5) {
+            do Player32.kill();
+        }
+        if(Map32.getTile(xPos, yPos) = 6) {
+            do Bar32.addScore(150);
+            do Ticks.stop();
+        }
+        return;
+    }
+
+    function void onRender() {
+        if(reqRender) {
+            do ScreenRenderer.drawPlayer32(xPos, yPos);
+            /*if(Map32.getTile(xPos, yPos) = 4) {
+                do Player32.kill();
+            }
+            if(Map32.getTile(xPos, yPos) = 5) {
+                do Player32.kill();
+            }
+            if(Map32.getTile(xPos, yPos) = 6) {
+                do Ticks.stop();
+            }*/
+            do Player32.render(false);
+            if(xPos = xPosBefore) {
+                if(yPos = yPosBefore) {
+                    return;
+                }
+            }
+            do Map32.renderTile(xPosBefore, yPosBefore);
+        }
+        let canMove = true;
+        return;
+    }
+
+    function void render(boolean bool) {
+        if(bool) {
+            let reqRender = true;
+        } else {
+            let reqRender = false;
+        }
+        return;
+    }
+
+    function int getXPos() {
+        return xPos;
+    }
+
+    function int getYPos() {
+        return yPos;
+    }
+
+    function void kill() {
+        //do ScreenRenderer.print("You died");
+        do Ticks.stopByKill();
+        return;
+    }
+}

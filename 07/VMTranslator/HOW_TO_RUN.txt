@@ -1,0 +1,5 @@
+cd src
+javac App.java
+java App <input.vm>
+
+Output file will be generated in the same folder as .asm

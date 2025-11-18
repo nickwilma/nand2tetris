@@ -1,0 +1,370 @@
+function Player32.spawn 0
+push argument 0
+pop static 0
+push argument 1
+pop static 1
+push constant 0
+not
+pop static 5
+push constant 20
+pop static 6
+push constant 1
+pop static 8
+push constant 0
+pop static 7
+push constant 0
+not
+call Player32.render 1
+pop temp 0
+push constant 0
+return
+function Player32.dispose 0
+push static 7
+call Bomb32.dispose 1
+pop temp 0
+push constant 0
+return
+function Player32.moveUp 0
+push static 0
+push static 1
+push constant 1
+sub
+call Player32.setPosition 2
+pop temp 0
+push constant 0
+return
+function Player32.moveDown 0
+push static 0
+push static 1
+push constant 1
+add
+call Player32.setPosition 2
+pop temp 0
+push constant 0
+return
+function Player32.moveRight 0
+push static 0
+push constant 1
+add
+push static 1
+call Player32.setPosition 2
+pop temp 0
+push constant 0
+return
+function Player32.moveLeft 0
+push static 0
+push constant 1
+sub
+push static 1
+call Player32.setPosition 2
+pop temp 0
+push constant 0
+return
+function Player32.getBombRadius 0
+push static 8
+return
+function Player32.placeBomb 0
+push static 0
+push static 1
+call Map32.locationBombPlacable 2
+not
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 0
+return
+label IF_FALSE0
+push static 6
+push constant 20
+lt
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push constant 0
+return
+label IF_FALSE1
+push static 7
+push constant 0
+eq
+not
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
+push static 7
+call Bomb32.isDetonated 1
+not
+if-goto IF_TRUE3
+goto IF_FALSE3
+label IF_TRUE3
+push constant 0
+return
+label IF_FALSE3
+push static 7
+call Bomb32.dispose 1
+pop temp 0
+label IF_FALSE2
+push constant 0
+pop static 6
+push static 0
+push static 1
+push static 8
+call Bomb32.new 3
+pop static 7
+push constant 0
+not
+call Player32.render 1
+pop temp 0
+push constant 0
+return
+function Player32.setPosition 0
+push argument 0
+push argument 1
+call Map32.locationFree 2
+not
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 0
+return
+label IF_FALSE0
+push static 5
+not
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push constant 0
+return
+label IF_FALSE1
+push static 0
+pop static 2
+push static 1
+pop static 3
+push argument 0
+pop static 0
+push argument 1
+pop static 1
+push constant 0
+pop static 5
+push constant 0
+not
+call Player32.render 1
+pop temp 0
+push constant 0
+return
+function Player32.onTick 0
+push argument 0
+push constant 131
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+call Player32.moveUp 0
+pop temp 0
+label IF_FALSE0
+push argument 0
+push constant 87
+eq
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+call Player32.moveUp 0
+pop temp 0
+label IF_FALSE1
+push argument 0
+push constant 68
+eq
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
+call Player32.moveRight 0
+pop temp 0
+label IF_FALSE2
+push argument 0
+push constant 132
+eq
+if-goto IF_TRUE3
+goto IF_FALSE3
+label IF_TRUE3
+call Player32.moveRight 0
+pop temp 0
+label IF_FALSE3
+push argument 0
+push constant 83
+eq
+if-goto IF_TRUE4
+goto IF_FALSE4
+label IF_TRUE4
+call Player32.moveDown 0
+pop temp 0
+label IF_FALSE4
+push argument 0
+push constant 133
+eq
+if-goto IF_TRUE5
+goto IF_FALSE5
+label IF_TRUE5
+call Player32.moveDown 0
+pop temp 0
+label IF_FALSE5
+push argument 0
+push constant 65
+eq
+if-goto IF_TRUE6
+goto IF_FALSE6
+label IF_TRUE6
+call Player32.moveLeft 0
+pop temp 0
+label IF_FALSE6
+push argument 0
+push constant 130
+eq
+if-goto IF_TRUE7
+goto IF_FALSE7
+label IF_TRUE7
+call Player32.moveLeft 0
+pop temp 0
+label IF_FALSE7
+push argument 0
+push constant 32
+eq
+if-goto IF_TRUE8
+goto IF_FALSE8
+label IF_TRUE8
+call Player32.placeBomb 0
+pop temp 0
+label IF_FALSE8
+push argument 0
+push constant 128
+eq
+if-goto IF_TRUE9
+goto IF_FALSE9
+label IF_TRUE9
+call Player32.placeBomb 0
+pop temp 0
+label IF_FALSE9
+push static 7
+push constant 0
+eq
+not
+if-goto IF_TRUE10
+goto IF_FALSE10
+label IF_TRUE10
+push static 7
+call Bomb32.onTick 1
+pop temp 0
+label IF_FALSE10
+push static 6
+push constant 1
+add
+pop static 6
+push static 6
+push constant 100
+gt
+if-goto IF_TRUE11
+goto IF_FALSE11
+label IF_TRUE11
+push constant 101
+pop static 6
+label IF_FALSE11
+push static 0
+push static 1
+call Map32.getTile 2
+push constant 4
+eq
+if-goto IF_TRUE12
+goto IF_FALSE12
+label IF_TRUE12
+call Player32.kill 0
+pop temp 0
+label IF_FALSE12
+push static 0
+push static 1
+call Map32.getTile 2
+push constant 5
+eq
+if-goto IF_TRUE13
+goto IF_FALSE13
+label IF_TRUE13
+call Player32.kill 0
+pop temp 0
+label IF_FALSE13
+push static 0
+push static 1
+call Map32.getTile 2
+push constant 6
+eq
+if-goto IF_TRUE14
+goto IF_FALSE14
+label IF_TRUE14
+push constant 150
+call Bar32.addScore 1
+pop temp 0
+call Ticks.stop 0
+pop temp 0
+label IF_FALSE14
+push constant 0
+return
+function Player32.onRender 0
+push static 4
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push static 0
+push static 1
+call ScreenRenderer.drawPlayer32 2
+pop temp 0
+push constant 0
+call Player32.render 1
+pop temp 0
+push static 0
+push static 2
+eq
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push static 1
+push static 3
+eq
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
+push constant 0
+return
+label IF_FALSE2
+label IF_FALSE1
+push static 2
+push static 3
+call Map32.renderTile 2
+pop temp 0
+label IF_FALSE0
+push constant 0
+not
+pop static 5
+push constant 0
+return
+function Player32.render 0
+push argument 0
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 0
+not
+pop static 4
+goto IF_END0
+label IF_FALSE0
+push constant 0
+pop static 4
+label IF_END0
+push constant 0
+return
+function Player32.getXPos 0
+push static 0
+return
+function Player32.getYPos 0
+push static 1
+return
+function Player32.kill 0
+call Ticks.stopByKill 0
+pop temp 0
+push constant 0
+return

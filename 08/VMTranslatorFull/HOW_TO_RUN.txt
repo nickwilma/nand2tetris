@@ -1,0 +1,9 @@
+cd src
+javac App.java
+java App <input.vm>
+
+Output file will be generated in the folder directory from <input.vm>
+
+Dadurch, dass ich die output location berechnen muss, kann ich nicht garantieren, dass es auf Mac und Linux das directory findet.
+Falls dem so ist, bitte in der FileHandler Klasse in der Methode write die Output location hardcoden.
+Sys.init wird immer gecallt. Falls dies nicht erwünscht ist für die einfachen Tests, dann bitte in der Klasse CommandResolver in der Methode init den Code dazu ausklammern.

@@ -1,0 +1,234 @@
+
+class Map32 {
+    static int sizeX, sizeY;
+    static Array2D map;
+
+    function void create(Array2D m) {
+        let sizeX = m.getWidth();
+        let sizeY = m.getHeight();
+        let map = m;
+        //do Map32.init();
+        do Map32.renderMap();
+        return;
+    }
+
+    function void renderMap() {
+        var int x, y;
+        let x = 0;
+        do Screen.setColor(true);
+
+        while (~(y = sizeY)) {
+            let x = 0;
+            while (~(x = sizeX)) {
+                do Map32.renderTile(x, y);
+                let x = x + 1;
+            }
+            let y = y + 1;
+        }
+        return;
+    }
+
+    function void init() {
+        var int x, y;
+        let x = 0;
+        do Screen.setColor(true);
+        while (~(x = sizeX)) {
+            let y = 0;
+            while (~(y = sizeY)) {
+                do Map32.setTile(x, y, 0);
+                let y = y + 1;
+            }
+            let x = x + 1;
+        }
+        do Map32.setTile(0, 0, 1);
+        do Map32.setTile(1, 0, 1);
+        do Map32.setTile(4, 4, 2);
+        do Map32.setTile(4, 5, 2);
+        do Map32.setTile(5, 5, 2);
+
+        
+        //do ScreenRenderer.drawBorderTilesCrosses32(sizeX, sizeY);
+        return;
+    }
+
+    function void setTile(int x, int y, int type) {
+        if(map.get(x, y) = 2) {
+            do Bar32.addScore(10);
+        }
+        do map.set(x, y, type);
+        do Map32.renderTile(x, y);
+        return;
+    }
+
+    function int getTile(int x, int y) {
+        return map.get(x, y);
+    }
+
+    function void renderTile(int x, int y) {
+        var int type;
+        let type = map.get(x, y);
+        //do Output.printInt(type);
+        /*if(true) {
+            return;
+        }*/
+        if(type = 0) {
+            do ScreenRenderer.printGround32(x, y);
+        }
+        if(type = 1) {
+            do ScreenRenderer.printStaticWall32(x, y);
+        }
+        if(type = 2) {
+            do ScreenRenderer.printBrickableWall32(x, y);
+        }
+        if(type = 3) {
+            do ScreenRenderer.printBomb32(x, y);
+        }
+        if(type = 4) {
+            do ScreenRenderer.printExplosion32(x, y);
+            if(Player32.getXPos() = x) {
+                if(Player32.getYPos() = y) {
+                    do Player32.kill();
+                }
+            }
+        }
+        if(type = 5) {
+            do ScreenRenderer.printEnemy32(x, y);
+        }
+        if(type = 6) {
+            do ScreenRenderer.printExit32(x, y);
+        }
+        return;
+    }
+
+    function boolean locationExists(int x, int y) {
+        if(x > (sizeX - 1)) {
+            return false;
+        }
+        if(x < 0) {
+            return false;
+        }
+        if(y > (sizeY - 1)) {
+            return false;
+        }
+        if(y < 0) {
+            return false;
+        }
+        return true;
+    }
+
+    function boolean locationFree(int x, int y) {
+        if(~(Map32.locationExists(x, y))) {
+            return false;
+        }
+        if(~(map.get(x, y) = 0)) {
+            if(~(map.get(x, y) = 3)) {
+                if(~(map.get(x, y) = 4)) {
+                    if(~(map.get(x, y) = 6)) {
+                        if(~(map.get(x, y) = 5)) {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    function boolean locationFreeEnemy(int x, int y) {
+        if(~(Map32.locationExists(x, y))) {
+            return false;
+        }
+        if(~(map.get(x, y) = 0)) {
+            if(~(map.get(x, y) = 3)) {
+                if(~(map.get(x, y) = 4)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    function boolean locationBombPlacable(int x, int y) {
+        if(~(Map32.locationExists(x, y))) {
+            return false;
+        }
+        if((map.get(x, y) = 3)) {
+            return false;
+        }
+        return true;
+    }
+
+    function boolean locationExplosionPlacable(int x, int y) {
+        if(~(Map32.locationExists(x, y))) {
+            return false;
+        }
+        if(~(map.get(x, y) = 2)) {
+            if(~(map.get(x, y) = 0)) {
+                if(~(map.get(x, y) = 4)) {
+                    if(~(map.get(x, y) = 5)) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    function boolean isPlayerInView(int xFrom, int yFrom) {
+        var int pX, pY;
+        var int xUp, xDown, yUp, yDown;
+        let pX = Player32.getXPos();
+        let pY = Player32.getYPos();
+
+        let xUp = xFrom - 1;
+        let xDown = xFrom + 1;
+        let yUp = yFrom - 1;
+        let yDown = yFrom + 1;
+
+        if(pY = yFrom) {
+            while(xUp > (xFrom - 5)) {
+                if(map.get(xUp, yFrom) = 0) {
+                    if(pX = xUp) {
+                        return true;
+                    }
+                    let xUp = xUp - 1;
+                } else {
+                    let xUp = -100;
+                }
+            }
+            while(xDown < (xFrom + 5)) {
+                if(map.get(xDown, yFrom) = 0) {
+                    if(pX = xDown) {
+                        return true;
+                    }
+                    let xDown = xDown + 1;
+                } else {
+                    let xDown = 100;
+                }
+            }
+        }
+        if(pX = xFrom) {
+            while(yUp > (yFrom - 5)) {
+                if(map.get(xFrom, yUp) = 0) {
+                    if(pY = yUp) {
+                        return true;
+                    }
+                    let yUp = yUp - 1;
+                } else {
+                    let yUp = -100;
+                }
+            }
+            while(yDown < (yFrom + 5)) {
+                if(map.get(xFrom, yDown) = 0) {
+                    if(pY = yDown) {
+                        return true;
+                    }
+                    let yDown = yDown + 1;
+                } else {
+                    let yDown = 100;
+                }
+            }
+        }
+        return false;
+    }
+}

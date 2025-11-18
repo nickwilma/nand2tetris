@@ -1,0 +1,40 @@
+
+class Array2D {
+    field Array array;
+    field int width, height;
+
+    constructor Array2D new(int x, int y) {
+        let width = x;
+        let height = y;
+        let array = Array.new(x * y);
+        return this;
+    }
+
+    method void dispose() {
+        do array.dispose();
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    method int to1D(int x, int y) {
+        //return (x + (y * height));
+        return (x + (y * width));
+    }
+
+    method void set(int x, int y, int value) {
+        let array[to1D(x, y)] = value;
+        return;
+    }
+
+    method int get(int x, int y) {
+        return array[to1D(x, y)];
+    }
+
+    method int getWidth() {
+        return width;
+    }
+
+    method int getHeight() {
+        return height;
+    }
+}

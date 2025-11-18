@@ -1,0 +1,165 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/12/Memory.jack
+
+/**
+ * Memory operations library.
+ */
+class Memory {
+    static Array memory, freeList;
+    static int heap, len, next;
+
+    /** Initializes the class. */
+    function void init() {
+        let heap = 2048;
+        let len = 0;
+        let next = 1;
+
+        let memory = 0;
+        let freeList = heap;    
+        let freeList[len] = 16384 - heap;
+        let freeList[next] = null; 
+
+        return;
+    }
+
+    /** Returns the RAM value at the given address. */
+    function int peek(int address) {
+        let memory = address;
+        return memory[0];
+    }
+
+    /** Sets the RAM value at the given address to the given value. */
+    function void poke(int address, int value) {
+        let memory = address;
+        let memory[0] = value;
+        return;
+    }
+
+    /* Helper function */
+    function Array findBestFit(int size) {
+        var Array bestBlock;
+        var int newSize, bestSize;
+
+        let bestBlock = null;
+        let memory = freeList;
+        let bestSize = 16384 - heap;
+
+        while(~(memory = null)) {
+            let newSize = memory[len] - 1;
+
+            if(~(newSize < Math.min(size, bestSize))){
+                let bestBlock = memory;
+                let bestSize = newSize;
+            }
+
+            // iterate
+            let memory = memory[next];
+        }
+
+        return bestBlock;
+    }
+
+    /* Helper function */
+    function boolean allocPartFromBlock(int size) {
+        return memory[len] > (size + 3);
+    }
+
+    /* Helper function */
+    function Array updateBlock(Array block, int size) {
+        let block[len] = memory[len] - size - 1;
+        let block[next] = memory[next];
+
+        return block;
+    }
+
+    /* Helper function */
+    function Array unlockSpaceInFreeList(Array o, int size) {
+        if(Memory.isSameAsMemory(o)) {
+            let memory[len] = memory[len] + size;
+            let o = memory;
+            return o;
+        }
+
+        if(memory = null) {
+            let o[len] = size;
+            let o[next] = freeList;
+            let freeList = o;
+            return o;
+        }
+
+        let o[len] = size;
+        let o[next] = memory[next];
+        let memory[next] = o;
+
+        return o;
+    }
+
+    /* Helper function */
+    function boolean isSameAsMemory(Array o) {
+        return o = (memory + memory[len]);
+    }
+
+    /* Helper function */
+    function boolean hasNextMemoryBlock(Array o) {
+        return (memory[next] < o) & ~(memory[next] = null);
+    }
+
+    /* Helper function */
+    function Array getPreviousBlock(Array o) {
+        if(freeList > o) {
+            return null;
+        }
+
+        let memory = freeList;
+        while(Memory.hasNextMemoryBlock(o)){
+            let memory = memory[next];
+        }
+
+        return memory;
+    }
+
+    /** Finds an available RAM block of the given size and returns
+     *  a reference to its base address. */
+    function int alloc(int size) {
+        var Array block, pointer;
+
+        let memory = Memory.findBestFit(size);
+
+        if(memory = null) {
+            return pointer;
+        }
+
+        let pointer = memory + 1;
+        
+        if(Memory.allocPartFromBlock(size)) {
+            let freeList = Memory.updateBlock(pointer + size, size);
+            let pointer[-1] = size + 1;
+
+            return pointer;
+        }
+
+        let block = memory[next];
+        let pointer[-1] = memory[len];
+
+        return pointer;
+    }
+
+    /** De-allocates the given object (cast as an array) by making
+     *  it available for future allocations. */
+    function void deAlloc(Array o) {
+        var Array pointer;
+
+        let memory = Memory.getPreviousBlock(o - 1);
+        let o = Memory.unlockSpaceInFreeList(o - 1, o[-1]);
+
+        if((o + o[len]) = o[next]) {
+            let pointer = o[next];
+            let o[len] = o[len] + pointer[len];
+            let o[next] = pointer[next];
+        }
+
+        return;
+    }
+}

@@ -1,0 +1,416 @@
+function Memory.init 0
+push constant 2048
+pop static 2
+push constant 0
+pop static 3
+push constant 1
+pop static 4
+push constant 0
+pop static 0
+push static 2
+pop static 1
+push static 3
+push static 1
+add
+push constant 16384
+push static 2
+sub
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push static 4
+push static 1
+add
+push constant 0
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 0
+return
+function Memory.peek 0
+push argument 0
+pop static 0
+push constant 0
+push static 0
+add
+pop pointer 1
+push that 0
+return
+function Memory.poke 0
+push argument 0
+pop static 0
+push constant 0
+push static 0
+add
+push argument 1
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 0
+return
+function Memory.findBestFit 3
+push constant 0
+pop local 0
+push static 1
+pop static 0
+push constant 16384
+push static 2
+sub
+pop local 2
+label WHILE_EXP0
+push static 0
+push constant 0
+eq
+not
+not
+if-goto WHILE_END0
+push static 3
+push static 0
+add
+pop pointer 1
+push that 0
+push constant 1
+sub
+pop local 1
+push local 1
+push argument 0
+push local 2
+call Math.min 2
+lt
+not
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push static 0
+pop local 0
+push local 1
+pop local 2
+label IF_FALSE0
+push static 4
+push static 0
+add
+pop pointer 1
+push that 0
+pop static 0
+goto WHILE_EXP0
+label WHILE_END0
+push local 0
+return
+function Memory.allocPartFromBlock 0
+push static 3
+push static 0
+add
+pop pointer 1
+push that 0
+push argument 0
+push constant 3
+add
+gt
+return
+function Memory.updateBlock 0
+push static 3
+push argument 0
+add
+push static 3
+push static 0
+add
+pop pointer 1
+push that 0
+push argument 1
+sub
+push constant 1
+sub
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push static 4
+push argument 0
+add
+push static 4
+push static 0
+add
+pop pointer 1
+push that 0
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push argument 0
+return
+function Memory.unlockSpaceInFreeList 0
+push argument 0
+call Memory.isSameAsMemory 1
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push static 3
+push static 0
+add
+push static 3
+push static 0
+add
+pop pointer 1
+push that 0
+push argument 1
+add
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push static 0
+pop argument 0
+push argument 0
+return
+label IF_FALSE0
+push static 0
+push constant 0
+eq
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push static 3
+push argument 0
+add
+push argument 1
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push static 4
+push argument 0
+add
+push static 1
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push argument 0
+pop static 1
+push argument 0
+return
+label IF_FALSE1
+push static 3
+push argument 0
+add
+push argument 1
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push static 4
+push argument 0
+add
+push static 4
+push static 0
+add
+pop pointer 1
+push that 0
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push static 4
+push static 0
+add
+push argument 0
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push argument 0
+return
+function Memory.isSameAsMemory 0
+push argument 0
+push static 0
+push static 3
+push static 0
+add
+pop pointer 1
+push that 0
+add
+eq
+return
+function Memory.hasNextMemoryBlock 0
+push static 4
+push static 0
+add
+pop pointer 1
+push that 0
+push argument 0
+lt
+push static 4
+push static 0
+add
+pop pointer 1
+push that 0
+push constant 0
+eq
+not
+and
+return
+function Memory.getPreviousBlock 0
+push static 1
+push argument 0
+gt
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 0
+return
+label IF_FALSE0
+push static 1
+pop static 0
+label WHILE_EXP0
+push argument 0
+call Memory.hasNextMemoryBlock 1
+not
+if-goto WHILE_END0
+push static 4
+push static 0
+add
+pop pointer 1
+push that 0
+pop static 0
+goto WHILE_EXP0
+label WHILE_END0
+push static 0
+return
+function Memory.alloc 2
+push argument 0
+call Memory.findBestFit 1
+pop static 0
+push static 0
+push constant 0
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push local 1
+return
+label IF_FALSE0
+push static 0
+push constant 1
+add
+pop local 1
+push argument 0
+call Memory.allocPartFromBlock 1
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push local 1
+push argument 0
+add
+push argument 0
+call Memory.updateBlock 2
+pop static 1
+push constant 1
+neg
+push local 1
+add
+push argument 0
+push constant 1
+add
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push local 1
+return
+label IF_FALSE1
+push static 4
+push static 0
+add
+pop pointer 1
+push that 0
+pop local 0
+push constant 1
+neg
+push local 1
+add
+push static 3
+push static 0
+add
+pop pointer 1
+push that 0
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push local 1
+return
+function Memory.deAlloc 1
+push argument 0
+push constant 1
+sub
+call Memory.getPreviousBlock 1
+pop static 0
+push argument 0
+push constant 1
+sub
+push constant 1
+neg
+push argument 0
+add
+pop pointer 1
+push that 0
+call Memory.unlockSpaceInFreeList 2
+pop argument 0
+push argument 0
+push static 3
+push argument 0
+add
+pop pointer 1
+push that 0
+add
+push static 4
+push argument 0
+add
+pop pointer 1
+push that 0
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push static 4
+push argument 0
+add
+pop pointer 1
+push that 0
+pop local 0
+push static 3
+push argument 0
+add
+push static 3
+push argument 0
+add
+pop pointer 1
+push that 0
+push static 3
+push local 0
+add
+pop pointer 1
+push that 0
+add
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push static 4
+push argument 0
+add
+push static 4
+push local 0
+add
+pop pointer 1
+push that 0
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+label IF_FALSE0
+push constant 0
+return

@@ -1,0 +1,65 @@
+
+class Ticks {
+    static BombList bombs;
+    static boolean activ;
+    static char key;
+    static int intervall;
+    static Level level;
+    static int exitCode;
+
+    function int run(Level l) {
+        let level = l;
+        do Ticks.init();
+        while(activ) {
+            do Sys.wait(50);
+            let key = Keyboard.keyPressed();
+            do Ticks.tickAll(key);
+            if(intervall < 0) {
+                do Ticks.renderAll();
+                let intervall = 3;
+            }
+            let intervall = intervall - 1;
+        }
+        return exitCode;
+    }
+
+    function void init() {
+        let intervall = 0;
+        let activ = true;
+        let exitCode = 0;
+        do Bar32.reset();
+        do Bar32.setLevel(level.getDifficulty());
+        do Bar32.addScore(level.getScore());
+        do Map32.create(level.getMap());
+        do Player32.spawn(level.getPlayerX(), level.getPlayerY());
+        return;
+    }
+
+    function void stop() {
+        let activ = false;
+        return;
+    }
+
+    function void stopByKill() {
+        let activ = false;
+        let exitCode = 1;
+        return;
+    }
+
+    function void tickAll(int key) {
+        //do Random.addSeed();
+        do Random.addSeed(key);
+        /*if(key = 140) {
+            do Ticks.stopByKill();
+        }*/
+        do Player32.onTick(key);
+        do level.onTick();
+        return;
+    }
+
+    function void renderAll() {
+        do Player32.onRender();
+        do level.onRender();
+        return;
+    }
+}

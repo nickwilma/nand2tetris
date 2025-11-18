@@ -1,0 +1,124 @@
+
+
+class Level {
+    field Array2D map;
+    field int xPlayer, yPlayer, difficulty, score;
+    field Enemy32 enemy1, enemy2, enemy3, enemy4, enemy5, enemy6;
+
+    constructor Level new(int xMap, int yMap, int x, int y, int d) {
+        let map = Array2D.new(xMap, yMap);
+        let xPlayer = x;
+        let yPlayer = y;
+        let difficulty = d;
+        do init(xMap, yMap);
+        let score = Bar32.getScore();
+        let enemy1 = Enemy32.new();
+        let enemy2 = Enemy32.new();
+        let enemy3 = Enemy32.new();
+        let enemy4 = Enemy32.new();
+        let enemy5 = Enemy32.new();
+        let enemy6 = Enemy32.new();
+        return this;
+    }
+
+    method void init(int sizeX, int sizeY) {
+        var int x, y;
+        let x = 0;
+        while (~(x = sizeX)) {
+            let y = 0;
+            while (~(y = sizeY)) {
+                do map.set(x, y, 0);
+                let y = y + 1;
+            }
+            let x = x + 1;
+        }
+        return;
+    }
+
+    method void dispose() {
+        do map.dispose();
+        do Memory.deAlloc(this);
+        do enemy1.dispose();
+        do enemy2.dispose();
+        do enemy3.dispose();
+        do enemy4.dispose();
+        do enemy5.dispose();
+        do enemy6.dispose();
+        return;
+    }
+
+    method void setTile(int x, int y, int type) {
+        do map.set(x, y, type);
+        return;
+    }
+
+    method Array2D getMap() {
+        return map;
+    }
+
+    method int getPlayerX() {
+        return xPlayer;
+    }
+
+    method int getPlayerY() {
+        return yPlayer;
+    }
+
+    method int getDifficulty() {
+        return difficulty;
+    }
+
+    method int getScore() {
+        return score;
+    }
+
+    method void spwanEnemy1(int x, int y) {
+        do enemy1.spawn(x, y);
+        return;
+    }
+
+    method void spwanEnemy2(int x, int y) {
+        do enemy2.spawn(x, y);
+        return;
+    }
+
+    method void spwanEnemy3(int x, int y) {
+        do enemy3.spawn(x, y);
+        return;
+    }
+
+    method void spwanEnemy4(int x, int y) {
+        do enemy4.spawn(x, y);
+        return;
+    }
+
+    method void spwanEnemy5(int x, int y) {
+        do enemy5.spawn(x, y);
+        return;
+    }
+
+    method void spwanEnemy6(int x, int y) {
+        do enemy6.spawn(x, y);
+        return;
+    }
+
+    method void onTick() {
+        do enemy1.onTick();
+        do enemy2.onTick();
+        do enemy3.onTick();
+        do enemy4.onTick();
+        do enemy5.onTick();
+        do enemy6.onTick();
+        return;
+    }
+
+    method void onRender() {
+        do enemy1.onRender();
+        do enemy2.onRender();
+        do enemy3.onRender();
+        do enemy4.onRender();
+        do enemy5.onRender();
+        do enemy6.onRender();
+        return;
+    }
+}

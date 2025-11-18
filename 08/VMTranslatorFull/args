@@ -1,0 +1,13 @@
+testcases/ProgramFlow/BasicLoop/BasicLoop.vm testcases/ProgramFlow/BasicLoop/BasicLoop.asm
+
+testcases/FunctionCalls/StaticsTest testcases/FunctionCalls/StaticsTest/StaticsTest.asm
+
+testcases/ProgramFlow/FibonacciSeries testcases/ProgramFlow/FibonacciSeries/FibonacciSeries.asm
+
+testcases/FunctionCalls/SimpleFunction testcases/FunctionCalls/SimpleFunction/SimpleFunction.asm
+
+testcases/FunctionCalls/NestedCall testcases/FunctionCalls/NestedCall/NestedCall.asm
+
+testcases/FunctionCalls/StaticsTest testcases/FunctionCalls/StaticsTest/StaticsTest.asm
+
+testcases/FunctionCalls/FibonacciElement testcases/FunctionCalls/FibonacciElement/FibonacciElement.asm

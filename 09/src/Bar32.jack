@@ -1,0 +1,47 @@
+
+
+class Bar32 {
+    static int score, bombRadius, level;
+
+    function void reset() {
+        do ScreenRenderer.printBarFrame32();
+        let score = 0;
+        let bombRadius = Player32.getBombRadius();
+        let level = 0;
+        do Bar32.renderBar();
+        return;
+    }
+
+    function void addScore(int val) {
+        let score = score + val;
+        do Bar32.renderBar();
+        return;
+    }
+
+    function void setBombRadius(int val) {
+        let bombRadius = val;
+        do Bar32.renderBar();
+        return;
+    }
+
+    function void setLevel(int val) {
+        let level = val;
+        do Bar32.renderBar();
+        return;
+    }
+
+    function int getLevel() {
+        return level;
+    }
+
+    function int getScore() {
+        return score;
+    }
+
+    function void renderBar() {
+        //do ScreenRenderer.printBombRadius(bombRadius);
+        do ScreenRenderer.printLevel(level);
+        do ScreenRenderer.printScore(score);
+        return;
+    }
+}

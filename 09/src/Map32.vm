@@ -1,0 +1,695 @@
+function Map32.create 0
+push argument 0
+call Array2D.getWidth 1
+pop static 0
+push argument 0
+call Array2D.getHeight 1
+pop static 1
+push argument 0
+pop static 2
+call Map32.renderMap 0
+pop temp 0
+push constant 0
+return
+function Map32.renderMap 2
+push constant 0
+pop local 0
+push constant 0
+not
+call Screen.setColor 1
+pop temp 0
+label WHILE_EXP0
+push local 1
+push static 1
+eq
+not
+not
+if-goto WHILE_END0
+push constant 0
+pop local 0
+label WHILE_EXP1
+push local 0
+push static 0
+eq
+not
+not
+if-goto WHILE_END1
+push local 0
+push local 1
+call Map32.renderTile 2
+pop temp 0
+push local 0
+push constant 1
+add
+pop local 0
+goto WHILE_EXP1
+label WHILE_END1
+push local 1
+push constant 1
+add
+pop local 1
+goto WHILE_EXP0
+label WHILE_END0
+push constant 0
+return
+function Map32.init 2
+push constant 0
+pop local 0
+push constant 0
+not
+call Screen.setColor 1
+pop temp 0
+label WHILE_EXP0
+push local 0
+push static 0
+eq
+not
+not
+if-goto WHILE_END0
+push constant 0
+pop local 1
+label WHILE_EXP1
+push local 1
+push static 1
+eq
+not
+not
+if-goto WHILE_END1
+push local 0
+push local 1
+push constant 0
+call Map32.setTile 3
+pop temp 0
+push local 1
+push constant 1
+add
+pop local 1
+goto WHILE_EXP1
+label WHILE_END1
+push local 0
+push constant 1
+add
+pop local 0
+goto WHILE_EXP0
+label WHILE_END0
+push constant 0
+push constant 0
+push constant 1
+call Map32.setTile 3
+pop temp 0
+push constant 1
+push constant 0
+push constant 1
+call Map32.setTile 3
+pop temp 0
+push constant 4
+push constant 4
+push constant 2
+call Map32.setTile 3
+pop temp 0
+push constant 4
+push constant 5
+push constant 2
+call Map32.setTile 3
+pop temp 0
+push constant 5
+push constant 5
+push constant 2
+call Map32.setTile 3
+pop temp 0
+push constant 0
+return
+function Map32.setTile 0
+push static 2
+push argument 0
+push argument 1
+call Array2D.get 3
+push constant 2
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 10
+call Bar32.addScore 1
+pop temp 0
+label IF_FALSE0
+push static 2
+push argument 0
+push argument 1
+push argument 2
+call Array2D.set 4
+pop temp 0
+push argument 0
+push argument 1
+call Map32.renderTile 2
+pop temp 0
+push constant 0
+return
+function Map32.getTile 0
+push static 2
+push argument 0
+push argument 1
+call Array2D.get 3
+return
+function Map32.renderTile 1
+push static 2
+push argument 0
+push argument 1
+call Array2D.get 3
+pop local 0
+push local 0
+push constant 0
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push argument 0
+push argument 1
+call ScreenRenderer.printGround32 2
+pop temp 0
+label IF_FALSE0
+push local 0
+push constant 1
+eq
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push argument 0
+push argument 1
+call ScreenRenderer.printStaticWall32 2
+pop temp 0
+label IF_FALSE1
+push local 0
+push constant 2
+eq
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
+push argument 0
+push argument 1
+call ScreenRenderer.printBrickableWall32 2
+pop temp 0
+label IF_FALSE2
+push local 0
+push constant 3
+eq
+if-goto IF_TRUE3
+goto IF_FALSE3
+label IF_TRUE3
+push argument 0
+push argument 1
+call ScreenRenderer.printBomb32 2
+pop temp 0
+label IF_FALSE3
+push local 0
+push constant 4
+eq
+if-goto IF_TRUE4
+goto IF_FALSE4
+label IF_TRUE4
+push argument 0
+push argument 1
+call ScreenRenderer.printExplosion32 2
+pop temp 0
+call Player32.getXPos 0
+push argument 0
+eq
+if-goto IF_TRUE5
+goto IF_FALSE5
+label IF_TRUE5
+call Player32.getYPos 0
+push argument 1
+eq
+if-goto IF_TRUE6
+goto IF_FALSE6
+label IF_TRUE6
+call Player32.kill 0
+pop temp 0
+label IF_FALSE6
+label IF_FALSE5
+label IF_FALSE4
+push local 0
+push constant 5
+eq
+if-goto IF_TRUE7
+goto IF_FALSE7
+label IF_TRUE7
+push argument 0
+push argument 1
+call ScreenRenderer.printEnemy32 2
+pop temp 0
+label IF_FALSE7
+push local 0
+push constant 6
+eq
+if-goto IF_TRUE8
+goto IF_FALSE8
+label IF_TRUE8
+push argument 0
+push argument 1
+call ScreenRenderer.printExit32 2
+pop temp 0
+label IF_FALSE8
+push constant 0
+return
+function Map32.locationExists 0
+push argument 0
+push static 0
+push constant 1
+sub
+gt
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 0
+return
+label IF_FALSE0
+push argument 0
+push constant 0
+lt
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push constant 0
+return
+label IF_FALSE1
+push argument 1
+push static 1
+push constant 1
+sub
+gt
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
+push constant 0
+return
+label IF_FALSE2
+push argument 1
+push constant 0
+lt
+if-goto IF_TRUE3
+goto IF_FALSE3
+label IF_TRUE3
+push constant 0
+return
+label IF_FALSE3
+push constant 0
+not
+return
+function Map32.locationFree 0
+push argument 0
+push argument 1
+call Map32.locationExists 2
+not
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 0
+return
+label IF_FALSE0
+push static 2
+push argument 0
+push argument 1
+call Array2D.get 3
+push constant 0
+eq
+not
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push static 2
+push argument 0
+push argument 1
+call Array2D.get 3
+push constant 3
+eq
+not
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
+push static 2
+push argument 0
+push argument 1
+call Array2D.get 3
+push constant 4
+eq
+not
+if-goto IF_TRUE3
+goto IF_FALSE3
+label IF_TRUE3
+push static 2
+push argument 0
+push argument 1
+call Array2D.get 3
+push constant 6
+eq
+not
+if-goto IF_TRUE4
+goto IF_FALSE4
+label IF_TRUE4
+push static 2
+push argument 0
+push argument 1
+call Array2D.get 3
+push constant 5
+eq
+not
+if-goto IF_TRUE5
+goto IF_FALSE5
+label IF_TRUE5
+push constant 0
+return
+label IF_FALSE5
+label IF_FALSE4
+label IF_FALSE3
+label IF_FALSE2
+label IF_FALSE1
+push constant 0
+not
+return
+function Map32.locationFreeEnemy 0
+push argument 0
+push argument 1
+call Map32.locationExists 2
+not
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 0
+return
+label IF_FALSE0
+push static 2
+push argument 0
+push argument 1
+call Array2D.get 3
+push constant 0
+eq
+not
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push static 2
+push argument 0
+push argument 1
+call Array2D.get 3
+push constant 3
+eq
+not
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
+push static 2
+push argument 0
+push argument 1
+call Array2D.get 3
+push constant 4
+eq
+not
+if-goto IF_TRUE3
+goto IF_FALSE3
+label IF_TRUE3
+push constant 0
+return
+label IF_FALSE3
+label IF_FALSE2
+label IF_FALSE1
+push constant 0
+not
+return
+function Map32.locationBombPlacable 0
+push argument 0
+push argument 1
+call Map32.locationExists 2
+not
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 0
+return
+label IF_FALSE0
+push static 2
+push argument 0
+push argument 1
+call Array2D.get 3
+push constant 3
+eq
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push constant 0
+return
+label IF_FALSE1
+push constant 0
+not
+return
+function Map32.locationExplosionPlacable 0
+push argument 0
+push argument 1
+call Map32.locationExists 2
+not
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 0
+return
+label IF_FALSE0
+push static 2
+push argument 0
+push argument 1
+call Array2D.get 3
+push constant 2
+eq
+not
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push static 2
+push argument 0
+push argument 1
+call Array2D.get 3
+push constant 0
+eq
+not
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
+push static 2
+push argument 0
+push argument 1
+call Array2D.get 3
+push constant 4
+eq
+not
+if-goto IF_TRUE3
+goto IF_FALSE3
+label IF_TRUE3
+push static 2
+push argument 0
+push argument 1
+call Array2D.get 3
+push constant 5
+eq
+not
+if-goto IF_TRUE4
+goto IF_FALSE4
+label IF_TRUE4
+push constant 0
+return
+label IF_FALSE4
+label IF_FALSE3
+label IF_FALSE2
+label IF_FALSE1
+push constant 0
+not
+return
+function Map32.isPlayerInView 6
+call Player32.getXPos 0
+pop local 0
+call Player32.getYPos 0
+pop local 1
+push argument 0
+push constant 1
+sub
+pop local 2
+push argument 0
+push constant 1
+add
+pop local 3
+push argument 1
+push constant 1
+sub
+pop local 4
+push argument 1
+push constant 1
+add
+pop local 5
+push local 1
+push argument 1
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+label WHILE_EXP0
+push local 2
+push argument 0
+push constant 5
+sub
+gt
+not
+if-goto WHILE_END0
+push static 2
+push local 2
+push argument 1
+call Array2D.get 3
+push constant 0
+eq
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push local 0
+push local 2
+eq
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
+push constant 0
+not
+return
+label IF_FALSE2
+push local 2
+push constant 1
+sub
+pop local 2
+goto IF_END1
+label IF_FALSE1
+push constant 100
+neg
+pop local 2
+label IF_END1
+goto WHILE_EXP0
+label WHILE_END0
+label WHILE_EXP1
+push local 3
+push argument 0
+push constant 5
+add
+lt
+not
+if-goto WHILE_END1
+push static 2
+push local 3
+push argument 1
+call Array2D.get 3
+push constant 0
+eq
+if-goto IF_TRUE3
+goto IF_FALSE3
+label IF_TRUE3
+push local 0
+push local 3
+eq
+if-goto IF_TRUE4
+goto IF_FALSE4
+label IF_TRUE4
+push constant 0
+not
+return
+label IF_FALSE4
+push local 3
+push constant 1
+add
+pop local 3
+goto IF_END3
+label IF_FALSE3
+push constant 100
+pop local 3
+label IF_END3
+goto WHILE_EXP1
+label WHILE_END1
+label IF_FALSE0
+push local 0
+push argument 0
+eq
+if-goto IF_TRUE5
+goto IF_FALSE5
+label IF_TRUE5
+label WHILE_EXP2
+push local 4
+push argument 1
+push constant 5
+sub
+gt
+not
+if-goto WHILE_END2
+push static 2
+push argument 0
+push local 4
+call Array2D.get 3
+push constant 0
+eq
+if-goto IF_TRUE6
+goto IF_FALSE6
+label IF_TRUE6
+push local 1
+push local 4
+eq
+if-goto IF_TRUE7
+goto IF_FALSE7
+label IF_TRUE7
+push constant 0
+not
+return
+label IF_FALSE7
+push local 4
+push constant 1
+sub
+pop local 4
+goto IF_END6
+label IF_FALSE6
+push constant 100
+neg
+pop local 4
+label IF_END6
+goto WHILE_EXP2
+label WHILE_END2
+label WHILE_EXP3
+push local 5
+push argument 1
+push constant 5
+add
+lt
+not
+if-goto WHILE_END3
+push static 2
+push argument 0
+push local 5
+call Array2D.get 3
+push constant 0
+eq
+if-goto IF_TRUE8
+goto IF_FALSE8
+label IF_TRUE8
+push local 1
+push local 5
+eq
+if-goto IF_TRUE9
+goto IF_FALSE9
+label IF_TRUE9
+push constant 0
+not
+return
+label IF_FALSE9
+push local 5
+push constant 1
+add
+pop local 5
+goto IF_END8
+label IF_FALSE8
+push constant 100
+pop local 5
+label IF_END8
+goto WHILE_EXP3
+label WHILE_END3
+label IF_FALSE5
+push constant 0
+return

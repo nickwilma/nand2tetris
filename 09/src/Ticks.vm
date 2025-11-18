@@ -1,0 +1,98 @@
+function Ticks.run 0
+push argument 0
+pop static 4
+call Ticks.init 0
+pop temp 0
+label WHILE_EXP0
+push static 1
+not
+if-goto WHILE_END0
+push constant 50
+call Sys.wait 1
+pop temp 0
+call Keyboard.keyPressed 0
+pop static 2
+push static 2
+call Ticks.tickAll 1
+pop temp 0
+push static 3
+push constant 0
+lt
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+call Ticks.renderAll 0
+pop temp 0
+push constant 3
+pop static 3
+label IF_FALSE0
+push static 3
+push constant 1
+sub
+pop static 3
+goto WHILE_EXP0
+label WHILE_END0
+push static 5
+return
+function Ticks.init 0
+push constant 0
+pop static 3
+push constant 0
+not
+pop static 1
+push constant 0
+pop static 5
+call Bar32.reset 0
+pop temp 0
+push static 4
+call Level.getDifficulty 1
+call Bar32.setLevel 1
+pop temp 0
+push static 4
+call Level.getScore 1
+call Bar32.addScore 1
+pop temp 0
+push static 4
+call Level.getMap 1
+call Map32.create 1
+pop temp 0
+push static 4
+call Level.getPlayerX 1
+push static 4
+call Level.getPlayerY 1
+call Player32.spawn 2
+pop temp 0
+push constant 0
+return
+function Ticks.stop 0
+push constant 0
+pop static 1
+push constant 0
+return
+function Ticks.stopByKill 0
+push constant 0
+pop static 1
+push constant 1
+pop static 5
+push constant 0
+return
+function Ticks.tickAll 0
+push argument 0
+call Random.addSeed 1
+pop temp 0
+push argument 0
+call Player32.onTick 1
+pop temp 0
+push static 4
+call Level.onTick 1
+pop temp 0
+push constant 0
+return
+function Ticks.renderAll 0
+call Player32.onRender 0
+pop temp 0
+push static 4
+call Level.onRender 1
+pop temp 0
+push constant 0
+return
