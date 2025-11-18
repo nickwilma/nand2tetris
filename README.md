@@ -1,5 +1,4 @@
-\## Nand to Tetris
-
+## Nand to Tetris
 
 
 Implementation of the Nand to Tetris courses (2023)
