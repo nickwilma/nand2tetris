@@ -1,6 +1,3 @@
 cd src
 javac App.java
 java App <folder / file>
-
-Ordner bitte mit / oder \ am ender angeben. Danke!
-Ansonsten werden die Files im überliegeneden Ordner generiert.
