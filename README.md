@@ -1,7 +1,8 @@
-## Nand to Tetris
+## Nand to Tetris (2023)
 
 
-Implementation of the Nand to Tetris courses (2023)
+
+Implementation of the Nand to Tetris Courses.
 
 
 
